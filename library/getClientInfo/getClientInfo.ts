@@ -1,11 +1,13 @@
+type BrowserName = "whale"|"msie"|"trident"|"edge"|"chrome"|"safari"|"firefox"|"opera"|null;
+type BrowserBrand = "samsung"|"lg"|"apple"|"other";
 type Browser = {
-    name:"Whale"|"MSIE"|"Trident"|"Edge"|"Chrome"|"Safari"|"Firefox"|"Opera"|null,
+    name:BrowserName,
     version:string|null
 };
 type ClientInfo = {
     device:string,
     ratio:number,
-    brand:("samsung"|"lg"|"apple"|"other"),
+    brand:BrowserBrand,
     browser:Browser,
     os:string,
     isXp:boolean,
@@ -21,7 +23,7 @@ function getClientInfo():ClientInfo{
         return (4 < window.devicePixelRatio) ? 4 : Math.floor(window.devicePixelRatio);
     };
 
-    const getBrand = (ua:string):string => {
+    const getBrand = (ua:string):BrowserBrand => {
         if (/samsung|shv-|sm-/i.test(ua)) return "samsung";
         if (/(lg-)|(lgms)/i.test(ua)) return "lg";
         if (/iphone|ipad|ipod/i.test(ua)) return "apple";
@@ -32,15 +34,14 @@ function getClientInfo():ClientInfo{
         const _browserName = ["Whale", "MSIE", "Trident", "Edge", "Chrome", "Safari", "Firefox", "Opera"].find((name) => {
             return new RegExp(name).test(ua);
         }) || null;
-        const _browserVersion = (_browserName) ? ua.match(new RegExp(_browserName + "\\/([\\d\\.]+)")) : null;
+
+        const _browserVersion = ua.match(new RegExp(_browserName + "\\/([\\d\\.]+)"));
 
         return {
-            name:_browserName,
-            version:_browserVersion
+            name:((_browserName) ? _browserName.toLowerCase() : null) as BrowserName,
+            version:(_browserVersion) ? _browserVersion[1] : null
         }
     }
-
-
 
 
     const UA = navigator.userAgent;
@@ -48,10 +49,13 @@ function getClientInfo():ClientInfo{
         device:getDevice(UA),
         ratio:getRatio(),
         brand:getBrand(UA),
-        browser:string,
-        os:string,
-        isXp:boolean,
-        isMobile:boolean
+        browser:{
+            name:"msie",
+            version:"string"
+        },
+        os:"string",
+        isXp:true,
+        isMobile:true
     }
 
 }
