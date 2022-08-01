@@ -1,6 +1,6 @@
-
 type BrowserName = "whale"|"msie"|"trident"|"edge"|"chrome"|"safari"|"firefox"|"opera"|"other";
 type DeviceBrand = "samsung"|"lg"|"apple"|"other";
+type DeviceOS = "android"|"ios"|"mac"|"unix"|"linux"|"win10"|"win8"|"win"|"other";
 type Browser = {
     name:BrowserName,
     version:string|null
@@ -35,9 +35,21 @@ function getClientInfo():ClientInfo{
     }
 
     const getBrowser = (ua:string):Browser => {
+
+        /* ES5 미호환
         const _browserName = ["Whale", "MSIE", "Trident", "Edge", "Chrome", "Safari", "Firefox", "Opera"].find((name) => {
             return new RegExp(name).test(ua);
         }) ?? "other";
+        */
+
+        let _browserName = "other";
+        const _browserNames = ["Whale", "MSIE", "Trident", "Edge", "Chrome", "Safari", "Firefox", "Opera"];
+        for(let name of _browserNames){
+            if( new RegExp(name).test(ua) ){
+                _browserName = name;
+                break;
+            }
+        }
 
         const _browserVersion = ua.match(new RegExp(_browserName + "\\/([\\d\\.]+)"));
 
@@ -48,34 +60,31 @@ function getClientInfo():ClientInfo{
     }
 
 
-    const getOS = (ua:string):string => {
-        var osFilter = [{
-            reg: /Android/,
-            name: "android"
-        }, {
-            reg: /iPhone|iPad|iPod/i,
-            name: "ios"
-        }, {
-            reg: /MacOSX/,
-            name: "mac"
-        }, {
-            reg: /X11/,
-            name: "unix"
-        }, {
-            reg: /Linux/,
-            name: "linux"
-        }, {
-            reg: /Windows NT 6.4|Windows NT 10.0/i,
-            name: "win10"
-        }, {
-            reg: /Windows NT 6.3|Windows NT 6.2/i,
-            name: "win8"
-        }, {
-            reg: /win/i,
-            name: "win"
-        }];
-        const result = osFilter.find((item) => item.reg.test(ua));
-        return result == undefined ? navigator.platform.toLowerCase() : result.name;
+    const getOS = (ua:string):DeviceOS => {
+        var osFilter = [
+            {reg: /Android/,name: "android"},
+            {reg: /iPhone|iPad|iPod/i,name: "ios"},
+            {reg: /MacOSX/,name: "mac"},
+            {reg: /X11/,name: "unix"},
+            {reg: /Linux/,name: "linux"},
+            {reg: /Windows NT 6.4|Windows NT 10.0/i,name: "win10"},
+            {reg: /Windows NT 6.3|Windows NT 6.2/i,name: "win8"},
+            {reg: /win/i,name: "win"}
+        ];
+
+        /* ES5 미호환 
+        const result = osFilter.find((item) => item.reg.test(ua)); 
+        return result == undefined ? "other" : result.name;
+        */
+
+        let result = "other";
+        for (let osInfo of osFilter){
+            if( osInfo.reg.test(ua) ){
+                result = osInfo.name;
+                break;
+            };
+        }
+        return result as DeviceOS;
     }
 
 

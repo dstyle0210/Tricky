@@ -1,7 +1,8 @@
 {
     "compilerOptions": {
-        "target":"es2015",
+        "target":"es5",
         "module":"CommonJS",
+        "removeComments": true,
         "types": [
             "jquery", 
             "./node_modules/user-agent-data-types"
