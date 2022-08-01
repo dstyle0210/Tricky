@@ -17,7 +17,10 @@ type ClientInfo = {
 function getClientInfo():ClientInfo{
 
     const getDevice = (ua:string):string => {
-        return "";
+        if (!/iPhone|iPad|iPod|Android/i.test(ua)) return "pc";
+        if (/iPhone|iPod/i.test(ua)) return "mobile";
+        if (/iPad/i.test(ua)) return "tablet";
+        if (/Android/.test(ua)) return (!/Mobile/i.test(ua)) ? "tablet" : "mobile";
     };
 
     const getRatio = ():number => {
@@ -86,5 +89,5 @@ function getClientInfo():ClientInfo{
         isXp:(UA.indexOf("Windows NT 5.1") > 0),
         isMobile:(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(UA.toLowerCase()))
     }
-    
+
 }
