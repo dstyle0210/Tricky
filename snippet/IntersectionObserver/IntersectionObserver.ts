@@ -13,14 +13,28 @@ interface ObserverOption {
 const setObserver = (target:ObserverTarget,option:ObserverOption,observerOption:IntersectionObserverInit) : Observer => {
     const opt = { 
         isOnce: false,
-        intersecting:(entry) => {},
-        unintersecting:(entry) => {}
+        intersecting:(element?:Element) => {},
+        unintersecting:(element?:Element) => {}
     };
     opt.isOnce = (option?.isOnce) ? true : false;
     opt.intersecting = (typeof option?.intersecting == "function") ? option.intersecting : opt.intersecting;
     opt.unintersecting = (typeof option?.unintersecting == "function") ? option.unintersecting : opt.unintersecting;
-    console.log(opt.intersecting);
 
+
+    // target의 인스턴스에 맞추어 실행
+    function targetCallback(target:ObserverTarget,cb:Function):void{
+        if(typeof target == "string"){
+            document.querySelectorAll(target).forEach((element)=>{
+                cb(element);
+            });
+        }else if(target instanceof Element){
+            cb(target);
+        }else if(target instanceof NodeList || target instanceof HTMLCollection){
+            Array.prototype.slice.call(target).forEach((element)=>{
+                cb(element);
+            });
+        }
+    }
 
     if (typeof IntersectionObserver != "undefined") {
         const io = new IntersectionObserver((entries, observer) => {
@@ -35,76 +49,25 @@ const setObserver = (target:ObserverTarget,option:ObserverOption,observerOption:
                 };
             });
         },observerOption);
-        
-        if(typeof target == "string"){
-            document.querySelectorAll(target).forEach((element)=>{
-                io.observe(element);
-            });
-        }else if(target instanceof Element){
-            io.observe(target);
-        }else if(target instanceof NodeList || target instanceof HTMLCollection){
-            Array.prototype.slice.call(target).forEach((element)=>{
-                io.observe(element);
-            });
-        }
+        targetCallback(target,(element:Element)=>{io.observe(element)}); // 초기등록(observe)
 
         return {
             observer:io,
             observe:(target) => {
-                if(typeof target == "string"){
-                    document.querySelectorAll(target).forEach((element)=>{
-                        io.observe(element);
-                    });
-                }else if(target instanceof Element){
-                    io.observe(target);
-                }else if(target instanceof NodeList || target instanceof HTMLCollection){
-                    Array.prototype.slice.call(target).forEach((element)=>{
-                        io.observe(element);
-                    });
-                }
+                targetCallback(target,(element:Element)=>{io.observe(element)}); // 등록 (observe)
             },
             unobserve:(target) => {
-                if(typeof target == "string"){
-                    document.querySelectorAll(target).forEach((element)=>{
-                        io.unobserve(element);
-                    });
-                }else if(target instanceof Element){
-                    io.unobserve(target);
-                }else if(target instanceof NodeList || target instanceof HTMLCollection){
-                    Array.prototype.slice.call(target).forEach((element)=>{
-                        io.unobserve(element);
-                    });
-                }
+                targetCallback(target,(element:Element)=>{io.unobserve(element)}); // 해제 (unobserve)
             }
         }
     }else{
         return {
             observer:null,
             observe:(target) => {
-                if(typeof target == "string"){
-                    document.querySelectorAll(target).forEach((element)=>{
-                        opt.intersecting(element);
-                    });
-                }else if(target instanceof Element){
-                    opt.intersecting(target);
-                }else if(target instanceof NodeList || target instanceof HTMLCollection){
-                    Array.prototype.slice.call(target).forEach((element)=>{
-                        opt.intersecting(element);
-                    });
-                }
+                targetCallback(target,(element:Element)=>{opt.intersecting(element)}); // 옵져버가 없다면 즉시 실행 후 끝
             },
             unobserve:(target) => {
-                if(typeof target == "string"){
-                    document.querySelectorAll(target).forEach((element)=>{
-                        opt.unintersecting(element);
-                    });
-                }else if(target instanceof Element){
-                    opt.unintersecting(target);
-                }else if(target instanceof NodeList || target instanceof HTMLCollection){
-                    Array.prototype.slice.call(target).forEach((element)=>{
-                        opt.unintersecting(element);
-                    });
-                }
+                // targetCallback(target,(element:Element)=>{opt.unintersecting(element)}); 무의미(1회 실행 후 끝남) : IE11 해당
             }
         }
     }
