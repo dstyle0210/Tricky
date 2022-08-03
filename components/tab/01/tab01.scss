@@ -1,0 +1,11 @@
+*{margin:0;padding:0;list-style:none;}
+a{text-decoration:none;}
+
+.tab01{display:flex;width:100%;overflow-x:auto;overflow-y:hidden;
+    &::-webkit-scrollbar{display:none;height:0}
+    &::-webkit-scrollbar-thumb{height:0}
+    >li{padding:0 5px;scroll-snap-align:start;}
+    a{padding:0 25px;height:35px;display:block;border:1px solid #333;border-radius:35px;white-space:nowrap;font-weight:700;font-size:15px;color:#333;line-height:35px;background:rgba(255,255,255,.8);
+        &.-on{color:#fff;background:#333}
+    }
+}
