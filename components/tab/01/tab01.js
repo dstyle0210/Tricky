@@ -5,7 +5,7 @@ function tab01(id) {
     var reduce = 0;
     $tabs.each(function (i, tab) {
         var $me = $(tab);
-        $me.data("posX", reduce - half + ($me.outerWidth() / 2)); // 가운데 정렬 처리
+        $me.data("posX", reduce - half + ($me.outerWidth() / 2));
         reduce += $me.outerWidth();
         $me.on("click.tab01", function () {
             $tab.animate({ scrollLeft: $(this).data("posX") }, 300);

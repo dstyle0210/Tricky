@@ -55,7 +55,7 @@ var setObserver = function (target, option, observerOption) {
             observe: function (target) {
                 targetCallback(target, function (element) { opt.intersecting(element); });
             },
-            unobserve: function (target) {
+            unobserve: function () {
             }
         };
     }
