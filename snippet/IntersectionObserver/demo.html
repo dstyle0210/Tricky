@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IntersectionObserver</title>
+    <script src="IntersectionObserver.js"></script>
+    <style>
+        div[class^=item]{border:1px solid red;height:300px;}
+    </style>
+</head>
+<body>
+    <div class="item1"></div>
+    <div class="item2"></div>
+    <div class="item3"></div>
+    <div class="item4"></div>
+    <div class="item5"></div>
+    <div class="item6"></div>
+    <div class="item7"></div>
+    <div class="item8"></div>
+    <div class="item9"></div>
+
+    <script>
+        var observer = setObserver("div",{
+            isOnce:false,
+            intersecting:function(element){
+                console.log("intersecting"+element.className);
+            },
+            unintersecting:function(element){
+                console.log("unintersecting"+element.className);
+            }
+        });
+        console.log(observer);
+    </script>
+</body>
+</html>

@@ -4,7 +4,7 @@
         "module":"CommonJS",
         "removeComments": true,
         "types": [
-            "jquery", 
+            "./node_modules/@types/jquery",
             "./node_modules/user-agent-data-types"
         ]
     },
