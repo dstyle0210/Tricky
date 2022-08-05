@@ -6,7 +6,7 @@ const replace = require("gulp-replace");
 const ts = require("gulp-typescript");
 
 task("test1",(done)=>{
-    watch("./components/**/*.scss",{usePolling:true}).on("change",(path) => {
+    watch("./**/*.scss",{usePolling:true}).on("change",(path) => {
         src(path)
         .pipe(sass())
         .pipe(csscomb("zen.json"))
@@ -22,7 +22,7 @@ task("test1",(done)=>{
 })
 
 task("test2",(done)=>{
-    watch("./components/**/*.ts",{usePolling:true}).on("change",(path) => {
+    watch("./**/*.ts",{usePolling:true}).on("change",(path) => {
         src(path)
         .pipe(ts())
         .pipe(dest("./"))

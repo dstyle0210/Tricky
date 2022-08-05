@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>레이어 띄우기</title>
+</head>
+<body>
+
+    <!-- 
+        딤드로 깔고, 레이어 가운데 정렬로 처리
+    -->
+
+    <div class="layer" id="layerDiv">
+        <div class="layer-header">
+            헤더
+            <a href="#">닫기</a>
+        </div>
+        <div class="layer-content">테스트<br />테스트<br />테스트<br />테스트<br />테스트<br />테스트</div>
+        <div class="layer-footer">풋터</div>
+    </div>
+
+<style>
+.layerCase{position:fixed;left:0;top:0;right:0;bottom:0;display:flex;background: rgba(0,0,0,.4);z-index: 200;flex-direction: column;justify-content: center;}
+
+.layer {width:80%;margin:0 auto;text-align:center;}
+.layer-header{background:red;font-size:13px;}
+.layer-content{background:#fff;font-size:13px;}
+.layer-footer{background:orange;font-size:13px;}
+</style>
+
+
+<script src="layer01.js"></script>
+<script>
+    layer01("#layerDiv");
+</script>
+
+</body>
+</html>

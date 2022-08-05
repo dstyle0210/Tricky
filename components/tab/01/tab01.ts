@@ -8,7 +8,7 @@ function tab01(id:string):void{
         $me.data("posX",reduce - half + ($me.outerWidth() / 2)); // 가운데 정렬 처리
         reduce += $me.outerWidth();
         $me.on("click.tab01",function(){
-            $tab.animate({scrollLeft:$(this).data("posX")},300);
+            $tab.animate({scrollLeft:$(this).data("posX")},300); 
             return false;
         });
     });
