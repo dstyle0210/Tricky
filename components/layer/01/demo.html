@@ -7,17 +7,30 @@
     <title>레이어 띄우기</title>
 </head>
 <body>
+    <button onclick="layer.open('#layerDiv');">열기</button>
 
     <!-- 
         딤드로 깔고, 레이어 가운데 정렬로 처리
     -->
 
+    <!-- 레이어01-->
     <div class="layer" id="layerDiv">
         <div class="layer-header">
             헤더
-            <a href="#">닫기</a>
+            <a href="#" onclick="layer.hide();">닫기</a>
         </div>
-        <div class="layer-content">테스트<br />테스트<br />테스트<br />테스트<br />테스트<br />테스트</div>
+        <div class="layer-content">레이어01<br /><button onclick="layer.open('#layerDiv2');">열기</button><br />테스트<br />테스트<br />테스트<br />테스트<br />테스트<br />테스트</div>
+        <div class="layer-footer">풋터</div>
+    </div>
+
+    <!-- 레이어01-->
+    <div class="layer" id="layerDiv2">
+        <div class="layer-header">
+            헤더
+            <a href="#" onclick="layer.hide();">닫기</a>
+            <a href="#" onclick="layer.hideAll();">전체닫기</a>
+        </div>
+        <div class="layer-content">레이어02<br />테스트<br />테스트<br />테스트<br />테스트<br />테스트<br />테스트</div>
         <div class="layer-footer">풋터</div>
     </div>
 
@@ -33,7 +46,7 @@
 
 <script src="layer01.js"></script>
 <script>
-    layer01("#layerDiv");
+    
 </script>
 
 </body>
