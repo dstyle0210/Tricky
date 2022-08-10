@@ -14,24 +14,28 @@
     -->
 
     <!-- 레이어01-->
-    <div class="layer" id="layerDiv">
-        <div class="layer-header">
-            헤더
-            <a href="#" onclick="layer.hide();">닫기</a>
+    <div style="display:none">
+        <div class="layer" id="layerDiv">
+            <div class="layer-header">
+                헤더
+                <a href="#" onclick="layer.close();">닫기</a>
+            </div>
+            <div class="layer-content">레이어01<br /><button onclick="layer.open('#layerDiv2');">열기</button><br />테스트<br />테스트<br />테스트<br />테스트<br />테스트<br />테스트</div>
+            <div class="layer-footer">풋터</div>
         </div>
-        <div class="layer-content">레이어01<br /><button onclick="layer.open('#layerDiv2');">열기</button><br />테스트<br />테스트<br />테스트<br />테스트<br />테스트<br />테스트</div>
-        <div class="layer-footer">풋터</div>
-    </div>
 
-    <!-- 레이어01-->
-    <div class="layer" id="layerDiv2">
-        <div class="layer-header">
-            헤더
-            <a href="#" onclick="layer.hide();">닫기</a>
-            <a href="#" onclick="layer.hideAll();">전체닫기</a>
+        <!-- 레이어01-->
+        <div class="layer" id="layerDiv2">
+            <div class="layer-header">
+                헤더
+                <a href="#" onclick="layer.close('#layerDiv');">밑에닫기</a> | 
+
+                <a href="#" onclick="layer.close();">닫기</a> | 
+                <a href="#" onclick="layer.closeAll();">전체닫기</a>
+            </div>
+            <div class="layer-content">레이어02<br />테스트<br />테스트<br />테스트<br />테스트<br />테스트<br />테스트</div>
+            <div class="layer-footer">풋터</div>
         </div>
-        <div class="layer-content">레이어02<br />테스트<br />테스트<br />테스트<br />테스트<br />테스트<br />테스트</div>
-        <div class="layer-footer">풋터</div>
     </div>
 
 <style>
@@ -44,9 +48,13 @@
 </style>
 
 
-<script src="layer01.js"></script>
+<script src="layer02.js"></script>
 <script>
-    
+    var layer = DimmedLayer({width:100,wrapperClassName:"layerCase"}); 
+    layer.open("#layerDiv",{
+        width:200
+    });
+    layer.open("#layerDiv2");
 </script>
 
 </body>

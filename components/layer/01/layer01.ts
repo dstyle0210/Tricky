@@ -19,16 +19,15 @@ const layer = new Dims({
 
 // method
 layer.open(selector , ?option = {
-    width:0, "auto"
+    width:0,
     height:0,
-    zIndex:100,
-    open(){
-        
-    }
+    zIndex:100
 });
 layer.close(?selector);
+layer.closeAll();
 layer.show(?selector);
 layer.hide(?selector);
+layer.hideAll();
 layer.pack(?selector);
 
 
@@ -37,17 +36,10 @@ layer.target; // 레이어 중 close 나 hide 가 발생 될 레이어
 layer.stack; // 등록 된 레이어 목록
 layer.isOpen; // 현재 레이어가 있는지 여부(open , close의 영향을 받음)
 layer.isVisible; // 현재 레이어가 보이고 있는지 여부 (show , hide 의 영향을 받음)
-layer.width // 레이어의 가로값
-layer.height // 레이어의 세로값
-layer.zIndex // 레이어의 z-index값
-
+layer.width // 현재 레이어의 가로값
+layer.height // 현재 레이어의 세로값
+layer.zIndex // 현재 레이어의 z-index값
 */
-
-
-
-
-
-
 
 const layer = {
     version:"0.1",
