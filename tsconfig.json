@@ -8,4 +8,8 @@
             "./node_modules/user-agent-data-types"
         ]
     },
+    "exclude":[
+        "./node_modules",
+        "./_src"
+    ]
  }
