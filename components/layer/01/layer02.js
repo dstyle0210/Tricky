@@ -20,8 +20,6 @@ var DimmedLayer = function (initWrapperStyle) {
     }
     styleEl.textContent = ".".concat(wrapperClassName, "{").concat(styleCode, "}");
     document.head.appendChild(styleEl);
-    var layerWrapper = document.createElement("div");
-    layerWrapper.className = wrapperClassName;
     me.stack = [];
     var addStack = function (element, wrapperElement) {
         me.stack.unshift({
@@ -29,7 +27,6 @@ var DimmedLayer = function (initWrapperStyle) {
             parent: element.parentNode,
             wrapper: wrapperElement
         });
-        console.log(me.stack);
     };
     var removeStack = function (element) {
         if (element) {
@@ -42,64 +39,63 @@ var DimmedLayer = function (initWrapperStyle) {
             me.stack.shift();
         }
         ;
-        console.log(me.stack);
     };
+    var body = document.getElementsByTagName("body")[0];
     var create = function (element, openOption) {
-        var wrapper = layerWrapper.cloneNode(true);
+        var wrapper = document.createElement("div");
+        wrapper.className = wrapperClassName;
+        if (openOption) {
+            var styleCode_1 = "";
+            for (var key in openOption) {
+                styleCode_1 += key + ":" + openOption[key] + ";";
+            }
+            wrapper.setAttribute("style", styleCode_1);
+        }
         addStack(element, wrapper);
         wrapper.appendChild(element);
         body.appendChild(wrapper);
     };
     var remove = function (element) {
-        if (element) {
-            var _loop_1 = function (stack) {
-                if (stack.element == element) {
-                    stack.parent.append(stack.element);
-                    stack.wrapper.remove();
-                    setTimeout(function () { removeStack(stack.element); });
-                }
-                ;
-            };
-            for (var _i = 0, _a = me.stack; _i < _a.length; _i++) {
-                var stack = _a[_i];
-                _loop_1(stack);
+        var _loop_1 = function (stack) {
+            if (stack.element == element) {
+                stack.parent.append(stack.element);
+                stack.wrapper.remove();
+                setTimeout(function () { removeStack(stack.element); });
             }
             ;
-        }
-        else {
-            me.stack[0].parent.append(me.stack[0].element);
-            me.stack[0].wrapper.remove();
-            setTimeout(removeStack);
+        };
+        for (var _i = 0, _a = me.stack; _i < _a.length; _i++) {
+            var stack = _a[_i];
+            _loop_1(stack);
         }
         ;
     };
-    var body = document.getElementsByTagName("body")[0];
-    me.open = function (selector, openOption) {
-        if (typeof selector == "string") {
-            var targets = document.querySelectorAll(selector);
+    me.open = function (target, openOption) {
+        if (typeof target == "string") {
+            var targets = document.querySelectorAll(target);
             Array.prototype.slice.call(targets).forEach(function (element) {
                 create(element, openOption);
             });
         }
+        else if (target instanceof Element) {
+            create(target, openOption);
+        }
         ;
     };
-    me.close = function (selector) {
-        if (typeof selector == "string") {
-            var targets = document.querySelectorAll(selector);
+    me.close = function (target) {
+        if (typeof target == "string") {
+            var targets = document.querySelectorAll(target);
             Array.prototype.slice.call(targets).forEach(function (element) {
                 remove(element);
             });
         }
-        else if (selector instanceof Element) {
-            for (var _i = 0, _a = me.stack; _i < _a.length; _i++) {
-                var stack = _a[_i];
-                remove(selector);
-            }
-            ;
+        else if (target instanceof Element) {
+            remove(target);
         }
         else {
-            remove();
+            remove(me.stack[0].element);
         }
+        ;
     };
     me.closeAll = function () {
         me.stack.forEach(function (stack) {

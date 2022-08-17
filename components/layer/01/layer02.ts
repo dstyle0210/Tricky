@@ -41,7 +41,9 @@ interface WrapperStyle {
     "background"?:string,
     "z-index"?:number,
     "flex-direction"?:string,
-    "justify-content"?:string,
+    "justify-content"?:string
+}
+interface WrapperOption extends WrapperStyle {
     "class"?:string
 }
 interface Stack{
@@ -49,9 +51,8 @@ interface Stack{
     parent:Element,
     wrapper:HTMLDivElement
 }
-type openSelector = string|Element;
-type closeSelector = string|Element|null;
-const DimmedLayer = function(initWrapperStyle?:WrapperStyle):{target:string,open:Function}{
+type layerContentTarget = string|Element;
+const DimmedLayer = function(initWrapperStyle?:WrapperOption):{target:string,open:Function}{
     const me = this;
     const mergeObject = (origin:Object,extend:Object):Object => {
         let result = {};
@@ -76,19 +77,15 @@ const DimmedLayer = function(initWrapperStyle?:WrapperStyle):{target:string,open
     styleEl.textContent = `.${wrapperClassName}{${styleCode}}`;
     document.head.appendChild(styleEl);
 
-    const layerWrapper = document.createElement("div");
-    layerWrapper.className = wrapperClassName;
-
 
     // 스택 관련 메소드 생성
     me.stack = [];
-    const addStack = (element:Element,wrapperElement:Node) => {
+    const addStack = (element:Element,wrapperElement:Element) => {
         me.stack.unshift({
             element:element,
             parent:element.parentNode,
             wrapper:wrapperElement
         });
-        console.log(me.stack);
     };
     const removeStack = (element?:Element) => {
         if(element){
@@ -99,7 +96,6 @@ const DimmedLayer = function(initWrapperStyle?:WrapperStyle):{target:string,open
         }else{
             me.stack.shift();
         };
-        console.log(me.stack);
     };
 
 
@@ -108,31 +104,32 @@ const DimmedLayer = function(initWrapperStyle?:WrapperStyle):{target:string,open
      * @param element 
      * @param openOption 
      */
-    const create = (element:Element,openOption:WrapperStyle) => {
-        // body에 넣기
-        const wrapper = layerWrapper.cloneNode(true);
-        // TODO: openOption 있으면 스타일시트 입히기
-
+    const body = document.getElementsByTagName("body")[0];
+    const create = (element:Element,openOption?:WrapperStyle) => {
+        // 랩퍼 생성.
+        const wrapper = document.createElement("div");
+        wrapper.className = wrapperClassName;
+        if(openOption){ // openOption 있으면 스타일시트 입히기
+            let styleCode = "";
+            for(let key in openOption){
+                styleCode += key+":"+openOption[key]+";";
+            }
+            wrapper.setAttribute("style",styleCode);
+        }
+        
         // 스택에 넣기.
-        addStack(element,wrapper);
+        addStack(element,wrapper); 
 
-        // 
         wrapper.appendChild(element);
         body.appendChild(wrapper);
     };
-    const remove = (element?:Element) => {
-        if(element){
-            for(let stack of me.stack){
-                if( stack.element == element ){
-                    stack.parent.append(stack.element);
-                    stack.wrapper.remove();
-                    setTimeout(()=>{removeStack(stack.element);});
-                };
+    const remove = (element:Element) => {
+        for(let stack of me.stack){
+            if( stack.element == element ){
+                stack.parent.append(stack.element);
+                stack.wrapper.remove();
+                setTimeout(()=>{removeStack(stack.element);});
             };
-        }else{
-            me.stack[0].parent.append(me.stack[0].element);
-            me.stack[0].wrapper.remove();
-            setTimeout(removeStack);
         };
     };
 
@@ -141,34 +138,34 @@ const DimmedLayer = function(initWrapperStyle?:WrapperStyle):{target:string,open
 
     // 딤드레이어 열기
     // 신규 레이어 전용 케이스를 생성 및 엘리먼트 삽입
-    const body = document.getElementsByTagName("body")[0];
+    
     /**
      * 지정된 셀렉터(엘리먼트)를 wrapper로 감싸 딤드시킨다.
      * @param selector 
      * @param openOption 
      */
-    me.open = (selector:openSelector,openOption:WrapperStyle) => {
-        if(typeof selector == "string"){
-            const targets = document.querySelectorAll(selector);
+    me.open = (target:layerContentTarget,openOption:WrapperStyle) => {
+        if(typeof target == "string"){
+            const targets = document.querySelectorAll(target);
             Array.prototype.slice.call(targets).forEach(function (element:Element) {
                 create(element,openOption);
             });
+        }else if(target instanceof Element){
+            create(target,openOption);
         };
     }
     // 딤드레이어 닫기
-    me.close = (selector?:closeSelector) => {
-        if(typeof selector == "string"){
-            const targets = document.querySelectorAll(selector);
-            Array.prototype.slice.call(targets).forEach(function (element) {
+    me.close = (target?:layerContentTarget) => {
+        if(typeof target == "string"){
+            const targets = document.querySelectorAll(target);
+            Array.prototype.slice.call(targets).forEach(function (element:Element) {
                 remove(element);
             });
-        }else if(selector instanceof Element){
-            for(let stack of me.stack){
-                remove(selector);
-            };
+        }else if(target instanceof Element){
+            remove(target);
         }else{
-            remove();
-        }
+            remove(me.stack[0].element);
+        };
     }
 
     me.closeAll = () => {
