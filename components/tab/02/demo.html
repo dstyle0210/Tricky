@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tab02</title>
+    <script src="tab02.js"></script>
+</head>
+<body>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        .m-tab{display:flex;}
+        .m-tab__list{display:flex;margin:0 auto;width:300px;border:1px solid #333;overflow-x:auto;padding:0 20px;position:relative;}
+        .m-tab__list a{display:block;margin:0 10px;padding:5px 10px;font-size:12px;border:1px solid orange;white-space: nowrap;}
+        .m-tab__list a.-on{background:orange;}
+        .m-tab__prevBtn{position:absolute;top:0;left:0;}
+        .m-tab__nextBtn{position:absolute;top:0;right:0;}
+    </style>
+    
+    <section class="m-tab" id="tab">
+        <div class="m-tab__prevBtn"><button>이전</button></div>
+        <div class="m-tab__list">
+            <a href="#">탭0</a>
+            <a href="#">탭 첫번째</a>
+            <a href="#">탭탭탭탭~</a>
+            <a href="#">탭 네에번째</a>
+            <a href="#">탭5</a>
+            <a href="#">탭 육</a>
+        </div>
+        <div class="m-tab__nextBtn"><button>다음</button></div>
+    </section>
+
+    <script>
+        var mTab = new mTabTS();
+        
+    </script>
+
+
+</body>
+</html>
